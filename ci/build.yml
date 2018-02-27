@@ -1,0 +1,10 @@
+#this task builds tarball from the whole repo
+
+platform: linux
+image_resource:
+  type: docker-image
+  source: {repository: busybox}
+  input: app-source
+  run:
+    path: ls
+    args: ["-alR"]

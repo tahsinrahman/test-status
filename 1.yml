@@ -1,0 +1,42 @@
+resources:
+- name: version #this resource is for versioning
+  type: semver
+  source:
+    driver: s3
+    initial_version: 0.0.1
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_access_key))
+    bucket: tahsin-concourse #bucket name
+    key: concourse-tutorial/version #what is it??
+
+jobs:
+- name: display-version #the task of this job is to display version
+  plan:
+  - get: version
+  - task: display-version
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      inputs:
+      - name: version
+      run:
+        path: cat
+        args: [version/number]
+
+- name: display-updated-version
+  plan:
+  - put: version
+    params: {pre: beta}
+  - task: show-updated-version
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      inputs:
+      - name: version
+      run:
+        path: cat
+        args: [version/number]
