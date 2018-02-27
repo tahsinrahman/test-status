@@ -8,6 +8,8 @@ image_resource:
 
 inputs:
 - name: app-source
+outputs:
+- name: build-dir
 
 run:
   path: app-source/ci/build.sh
