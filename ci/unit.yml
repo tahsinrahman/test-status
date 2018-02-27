@@ -8,5 +8,5 @@ image_resource:
  - name: app-source/ci
 
 run:
-  path: ls
-  args: ["-alR"]
+  path: pwd
+  args: []
