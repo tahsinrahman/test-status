@@ -4,9 +4,9 @@ image_resource:
   type: docker-image
   source: {repository: busybox}
 
-# inputs:
-# - name: ci #added this because in real world you've to execute script from this dir
+ inputs:
+ - name: app-source/ci
 
 run:
-  path: echo
-  args: [executing unit test]
+  path: ls
+  args: ["-alR"]
