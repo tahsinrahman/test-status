@@ -8,5 +8,4 @@ inputs:
 - name: app-source
 
 run:
-  path: ls
-  args: ["-alR"]
+  path: app-source/ci/unit.sh
