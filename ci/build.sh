@@ -2,6 +2,7 @@
 
 set -e -x
 
+mkdir -p build_dir
 echo "building tarball"
-tar -cvf tahsin-concourse.tar app-source
+tar -cvf build_dir/tahsin-concourse.tar app-source
 ls -al
