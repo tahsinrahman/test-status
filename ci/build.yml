@@ -12,8 +12,5 @@ inputs:
 outputs:
 - name: build_dir
 
-params:
-  VERSION: version/number
-
 run:
   path: app-source/ci/build.sh

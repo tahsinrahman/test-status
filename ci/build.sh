@@ -3,8 +3,7 @@
 set -e -x
 
 echo "building tarball"
-tar -cvzf build_dir/tahsin-concourse-.tar app-source
+tar -cvzf build_dir/tahsin-concourse-$(echo version/number).tar app-source
 ls -al
 
-cat version/version
-env
+
