@@ -5,8 +5,8 @@ image_resource:
   source: {repository: busybox}
 
 inputs:
-- name: app-source/ci
+- name: app-source
 
 run:
-  path: pwd
-  args: []
+  path: ls
+  args: ["-alR"]
