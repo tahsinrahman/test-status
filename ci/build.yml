@@ -8,6 +8,7 @@ image_resource:
 
 inputs:
 - name: app-source
+- name: version
 outputs:
 - name: build_dir
 
