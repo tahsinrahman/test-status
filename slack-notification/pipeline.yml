@@ -21,4 +21,5 @@ jobs:
       inputs:
       - name: my-app
       run:
-        path: my-app/slack-notification/test.sh
+        path: ls
+        # path: my-app/slack-notification/test.sh
