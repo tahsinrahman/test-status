@@ -8,7 +8,7 @@ resources:
 - name: source-code
   type: git
   source:
-    repo: tahsinrahman/test-concourse
+    repo: https://github.com/tahsinrahman/test-concourse
     branch: master
 - name: pull-requests
   type: pull-request
@@ -20,7 +20,7 @@ jobs:
 - name: test-master
   plan:
   - get: source-code
-    triger: true
+    trigger: true
   - task: run-test
     config:
       platform: linux
