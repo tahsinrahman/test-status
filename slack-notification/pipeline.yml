@@ -41,4 +41,5 @@ jobs:
     on_success:
       put: notify
       params:
-        text: "hello world"
+        text_file: notify_message/message
+        silent: true
