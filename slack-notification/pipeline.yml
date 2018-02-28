@@ -1,0 +1,24 @@
+resources:
+- name: my-app
+  type: git
+  source:
+    uri: https://github.com/tahsinrahman/test-concourse
+    branch: master
+
+jobs:
+- name: test
+  public: true
+  serial: true
+  plan:
+  - get: my-app
+    trigger: true
+  - task: test
+    config:
+      platform: linux
+      image_resource:
+        type: docker
+        source: { repository: ubuntu }
+      inputs:
+      - name: my-app
+      run:
+        path: my-app/slack-notification/test.sh
