@@ -38,3 +38,7 @@ jobs:
       params:
         text_file: notify_message/message
         silent: true
+    on_success:
+      put: notify
+      params:
+        text: "hello world"
