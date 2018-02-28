@@ -8,7 +8,7 @@ resources:
 - name: source-code
   type: git
   source:
-    repo: https://github.com/tahsinrahman/test-concourse
+    uri: https://github.com/tahsinrahman/test-concourse
     branch: master
 - name: pull-requests
   type: pull-request
