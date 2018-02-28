@@ -54,5 +54,14 @@ jobs:
       - name: source-code
       - name: pull-requests
       run:
-        path: ls
-        args: ["-alR"]
+        path: pull-requests/git-pull/test.sh
+    on_success:
+      put: pull-requests
+      params:
+        path: pull-requests
+        status: success
+    on_failure:
+      put: pull-requests
+      params:
+        path: pull-requests
+        status: failure
