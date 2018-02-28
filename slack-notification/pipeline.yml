@@ -33,13 +33,10 @@ jobs:
       - name: notify_message
       run:
         path: my-app/slack-notification/test.sh
-    on_failure:
+    ensure:
       put: notify
       params:
         text_file: notify_message/message
         silent: true
-    on_success:
-      put: notify
-      params:
-        text_file: notify_message/message
-        silent: true
+        username: concourse-ci
+        icon_emoji: :ghost'
