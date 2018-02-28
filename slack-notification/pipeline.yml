@@ -39,4 +39,4 @@ jobs:
         text_file: notify_message/message
         silent: true
         username: concourse-ci
-        icon_emoji: :ghost'
+        icon_emoji: ":ghost:"
