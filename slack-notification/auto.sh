@@ -1,5 +1,5 @@
 #!/bin/bash
-echo 1 > tmp
+echo $RANDOM > tmp
 git add *
 git commit -m 'auto'
 git push
