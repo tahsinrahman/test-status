@@ -55,4 +55,4 @@ jobs:
       - name: pull-requests
       run:
         path: ls
-        args: ["-alR"]
+        args: ["-lR"]
