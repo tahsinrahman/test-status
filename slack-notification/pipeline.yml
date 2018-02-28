@@ -1,9 +1,18 @@
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
 resources:
 - name: my-app
   type: git
   source:
     uri: https://github.com/tahsinrahman/test-concourse
     branch: master
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack-webhook))
 
 jobs:
 - name: test
@@ -22,3 +31,9 @@ jobs:
       - name: my-app
       run:
         path: my-app/slack-notification/test.sh
+    on_failure:
+      put: notify
+      params:
+        text: "job 'test' failed"
+        silent: true
+
