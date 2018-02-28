@@ -49,7 +49,7 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: busybox
+          repository: ubuntu
       inputs:
       - name: source-code
       - name: pull-requests
