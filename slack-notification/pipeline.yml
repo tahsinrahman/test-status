@@ -29,11 +29,12 @@ jobs:
         source: { repository: ubuntu }
       inputs:
       - name: my-app
+      outputs:
+      - name: notify_message
       run:
         path: my-app/slack-notification/test.sh
     on_failure:
       put: notify
       params:
-        text: "job 'test' failed"
+        text_file: notify_message/message
         silent: true
-
