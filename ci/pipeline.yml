@@ -1,0 +1,119 @@
+#check for new commit                                     resource: git-repo
+#if new commit found, print 'testing'                     job: unit-test 3.tag version 4.publish to s3
+#if successfull
+#build tar archive                                        job: build-tarball-rc task: build & tag
+#tag rc version to that archive                            resource: version
+#save archive in s3 tahsin-concourse-rc bucket             resource: store-rc
+#print 'testing rc app'
+#if successfull
+#build tar archive
+#bump minor version update
+#push to tahsin-concourse bucket                            resource: store-final
+
+resources:
+- name: app-source
+  type: git
+  source:
+    uri: https://github.com/tahsinrahman/test-concourse
+    branch: master
+
+- name: version
+  type: semver
+  source:
+    initial_version: 0.0.1
+    driver: s3
+    bucket: tahsin-concourse-rc
+    key: current-version
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_access_key))
+
+- name: store-rc
+  type: s3
+  source:
+    bucket: tahsin-concourse-rc
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_access_key))
+    regexp: tahsin-concourse-(.*).tar
+
+- name: store-final
+  type: s3
+  source:
+    bucket: tahsin-concourse
+    access_key_id: ((aws_access_key))
+    secret_access_key: ((aws_secret_access_key))
+    regexp: tahsin-concourse-(.*).tar
+
+jobs:
+
+#this job will check for git commits
+#if new commit arrives, it'll run unit test
+
+- name: unit-test
+  plan:
+  - get: app-source
+    trigger: true
+  - task: unit-test
+    file: app-source/ci/unit.yml
+
+#this job will build tarball from repo if unit-test is successfull
+#then add version
+
+- name: build-rc
+  serial_groups: [version]
+  plan:
+  - get: app-source
+    passed: [unit-test]
+    trigger: true
+  - get: version
+    params: {pre: rc}
+  - task: build-rc-tarball          #creates tarball
+    file: app-source/ci/build.yml
+    # - task: check
+    # - config:
+    # -   platform: linux
+    # -   image_resource:
+    # -     type: docker-image
+    # -     source: { repository: ubuntu }
+    # -   inputs:
+    # -   - name: build_dir
+    # -   - name: version
+    # -   run:
+    # -     path: cat
+    # -     args: [version/number]
+  - put: store-rc                   #stores tarball into s3
+    params: {file: build_dir/tahsin-concourse-*.tar}
+  - put: version
+    params: {file: version/number}
+
+#this job will run integration test on the rc builds
+- name: integration
+  serial: true
+  plan:
+  - get: store-rc
+    trigger: true
+    passed: [build-rc]
+  - get: app-source
+    passed: [build-rc]
+  - task: integration
+    file: app-source/ci/integration.yml
+    params:
+      API_ENDPOINT: ((api_endpoint))
+      ACCESS_KEY: ((aws_access_key))
+
+#if integration test is successfull, then it'll shit it to final-release bucket
+- name: shipit
+  serial_groups: [version]
+  plan:
+  - get: store-rc
+    passed: [integration]
+    trigger: true
+  - get: app-source
+    passed: [integration]
+  - get: version
+    params: {bump: final}
+  - task: promote-to-final
+    file: app-source/ci/build.yml
+  - put: store-final
+    params: { file: build_dir/tahsin-concourse-*.tar }
+  - put: version
+    params: { file: version/number }
