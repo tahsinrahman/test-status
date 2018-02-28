@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e -x -u
 
-echo "hello world"
+echo "this will fail"
+exit 1
 
 #if [[ $value -gt 16384 ]]; then
 #    cat > notify_message/message <<EOF
