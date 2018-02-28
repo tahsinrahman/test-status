@@ -1,0 +1,58 @@
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+
+resources:
+- name: source-code
+  type: git
+  source:
+    repo: tahsinrahman/test-concourse
+    branch: master
+- name: pull-requests
+  type: pull-request
+  source:
+    repo: tahsinrahman/test-concourse
+    access_token: ((access_token))
+
+jobs:
+- name: test-master
+  plan:
+  - get: source-code
+    triger: true
+  - task: run-test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: busybox
+      inputs:
+      - name: source-code
+      run:
+        path: source-code/git-pull/test.sh
+
+- name: test-pr
+  plan:
+  - get: source-code
+  - get: pull-requests
+    trigger: true
+    version: every
+  - put: pull-requests
+    params:
+      path: pull-requests
+      status: pending
+  - task: run-test
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: busybox
+      inputs:
+      - name: source-code
+      - name: pull-requests
+      run:
+        path: ls
+        args: ["-alR"]
