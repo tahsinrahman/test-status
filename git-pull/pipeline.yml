@@ -51,8 +51,6 @@ jobs:
     version: every
   - task: change-label
     file: source-code/git-pull/label.yml
-    params:
-      hello: world
   - put: pull-requests
     params:
       path: pull-requests

@@ -6,6 +6,8 @@ image_resource:
 
 inputs:
 - name: source-code
+params:
+  hello: 'world'
 run:
   path: echo
   args: [$hello]
