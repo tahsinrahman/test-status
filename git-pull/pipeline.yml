@@ -4,6 +4,11 @@ resource_types:
   source:
     repository: jtarchie/pr
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+
 resources:
 - name: source-code
   type: git
@@ -15,7 +20,11 @@ resources:
   source:
     repo: tahsinrahman/test-concourse
     access_token: ((access_token))
-    label: run-test
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack-webhook))
 
 jobs:
 - name: test-master
@@ -40,6 +49,10 @@ jobs:
   - get: pull-requests
     trigger: true
     version: every
+  - task: change-label
+    file: source-code/git-pull/label.yml
+    params:
+      hello: world
   - put: pull-requests
     params:
       path: pull-requests
@@ -61,8 +74,16 @@ jobs:
       params:
         path: pull-requests
         status: success
+      put: notify
+      params:
+        text_file: "test successfull"
+        silent: true
     on_failure:
       put: pull-requests
       params:
         path: pull-requests
         status: failure
+      put: notify
+      params:
+        text_file: "test failed"
+        silent: true
