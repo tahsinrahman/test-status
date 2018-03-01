@@ -74,7 +74,7 @@ jobs:
         status: success
       put: notify
       params:
-        text_file: "test successfull"
+        text: "test successfull"
         silent: true
     on_failure:
       put: pull-requests
@@ -83,5 +83,5 @@ jobs:
         status: failure
       put: notify
       params:
-        text_file: "test failed"
+        text: "test failed"
         silent: true
