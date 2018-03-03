@@ -9,7 +9,7 @@ echo "hello world"
 #EOF
 #    exit 1
 #else
-#    cat > notify_message/message <<EOF
+#    cat  > notify_message/message <<EOF
 #job 'test' succeeded. Random value $value is less than 16384
 #EOF
 #    exit 0
