@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -x -u
 
-echo "hello world"
+echo "hello adfasdfasdfworld"
 
 #if [[ $value -gt 16384 ]]; then
 #    cat > notify_message/message <<EOF
